@@ -29,7 +29,7 @@ relative to current revision.
 =cut
 
 # =========================
-package TWiki::Plugins::RevisionLinkPlugin;
+package Foswiki::Plugins::RevisionLinkPlugin;
 
 # Always use strict to enforce variable scoping
 use strict;
@@ -65,14 +65,14 @@ REQUIRED
 
 Called to initialise the plugin. If everything is OK, should return
 a non-zero value. On non-fatal failure, should write a message
-using TWiki::Func::writeWarning and return 0. In this case
+using Foswiki::Func::writeWarning and return 0. In this case
 %FAILEDPLUGINS% will indicate which plugins failed.
 
 In the case of a catastrophic failure that will prevent the whole
 installation from working safely, this handler may use 'die', which
 will be trapped and reported in the browser.
 
-You may also call =TWiki::Func::registerTagHandler= here to register
+You may also call =Foswiki::Func::registerTagHandler= here to register
 a function to handle variables that have standard TWiki syntax - for example,
 =%MYTAG{"my param" myarg="My Arg"}%. You can also override internal
 TWiki variable handling functions this way, though this practice is unsupported
@@ -85,16 +85,16 @@ sub initPlugin
   my ( $topic, $web, $user, $installWeb ) = @_;
 
   # check for Plugins.pm versions
-  if( $TWiki::Plugins::VERSION < 1 ) {
-    &TWiki::Func::writeWarning( "Version mismatch between RevisionLinkPlugin and Plugins.pm" );
+  if( $Foswiki::Plugins::VERSION < 1 ) {
+    &Foswiki::Func::writeWarning( "Version mismatch between RevisionLinkPlugin and Plugins.pm" );
     return 0;
   }
 
   # Get plugin debug flag
-  $debug = &TWiki::Func::getPreferencesFlag( "REVISIONLINKPLUGIN_DEBUG" );
+  $debug = &Foswiki::Func::getPreferencesFlag( "REVISIONLINKPLUGIN_DEBUG" );
 
   # Plugin correctly initialized
-  &TWiki::Func::writeDebug( "- TWiki::Plugins::RevisionLinkPlugin::initPlugin( $web.$topic ) is OK" ) if $debug;
+  &Foswiki::Func::writeDebug( "- Foswiki::Plugins::RevisionLinkPlugin::initPlugin( $web.$topic ) is OK" ) if $debug;
   return 1;
 }
 
@@ -110,7 +110,7 @@ a topic is being rendered.
 
 Plugins that want to implement their own %TAGS% with non-trivial
 additional syntax should implement this function. Internal TWiki
-variables (and any variables declared using =TWiki::Func::registerTagHandler=)
+variables (and any variables declared using =Foswiki::Func::registerTagHandler=)
 are expanded _before_, and then again _after_, this function is called
 to ensure all %TAGS% are expanded.
 
@@ -127,7 +127,7 @@ sub commonTagsHandler
 {
 ### my ( $text, $topic, $web ) = @_;   # do not uncomment, use $_[0], $_[1]... instead
 
-  TWiki::Func::writeDebug( "- RevisionLinkPlugin::commonTagsHandler( $_[2].$_[1] )" ) if $debug;
+  Foswiki::Func::writeDebug( "- RevisionLinkPlugin::commonTagsHandler( $_[2].$_[1] )" ) if $debug;
 
   # This is the place to define customized tags and variables
   # Called by sub handleCommonTags, after %INCLUDE:"..."%
@@ -161,16 +161,16 @@ sub handleRevision {
   my $targetTopic = $params{'topic'} || $tmpTopic;
 
   if ( $rev < 0 ) {
-    my $maxRev = (TWiki::Func::getRevisionInfo( $tmpWeb, $targetTopic ))[2];
+    my $maxRev = (Foswiki::Func::getRevisionInfo( $tmpWeb, $targetTopic ))[2];
     #If Cairo we need to strip 1.
     $maxRev =~ s/1\.(.*)/$1/;
     $rev = $maxRev + $rev;
     if ( $rev < 1 ) { $rev = 1; }
   }
   
-  my ( $revDate, $revUser, $tmpRev, $revComment ) = TWiki::Func::getRevisionInfo( $tmpWeb, $targetTopic, $rev);
+  my ( $revDate, $revUser, $tmpRev, $revComment ) = Foswiki::Func::getRevisionInfo( $tmpWeb, $targetTopic, $rev);
   #If Cairo and we stripped the "1." we put it back
-  if ( $TWiki::Plugins::VERSION < 1.1 && index( $rev, "." ) < 0 ) {
+  if ( $Foswiki::Plugins::VERSION < 1.1 && index( $rev, "." ) < 0 ) {
     $rev = "1.$rev";
   }
 
@@ -203,10 +203,10 @@ Extract all parameters from a variable string and returns a hash of parameters
    
 return: =%parameters=  Hash containing all parameters. The nameless parameter is stored in key =_DEFAULT=
 
-extendedExtractParameters is an extended version of TWiki::Func::extractParameters
+extendedExtractParameters is an extended version of Foswiki::Func::extractParameters
 which is capable of understanding both " and ' round strings and the default value at any
-position. Dakar has the code in TWiki::Attrs::new but this will not work in Cairo and is not
-part of published API. So the code below is actually a short version of Dakar's TWiki::Attrs::new
+position. Dakar has the code in Foswiki::Attrs::new but this will not work in Cairo and is not
+part of published API. So the code below is actually a short version of Dakar's Foswiki::Attrs::new
 with $friendly true.
 
 =cut
