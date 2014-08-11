@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" date="1147820697" format="1.0" version="$Rev$"}%
+%META:TOPICINFO{author="ProjectContributor" date="1407719387" format="1.1" version="1"}%
 ---+ Revision Link Plugin
 
 This plugin enables the author of a Foswiki page to specify a particular version of a topic to link to. You can use also negative numbers when specifying the revision number which means a revision back in time relative to the current revision.
